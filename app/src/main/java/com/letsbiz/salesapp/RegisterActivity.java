@@ -25,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,12 +34,12 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText inputEmail, inputPassword, inputUsername;
-    Button Register, SignInLinkBtn;
-    String Email, Password, userName;
-    FirebaseAuth firebaseAuth;
-    Boolean EditTextStatus, checkPassword;
-    ImageButton showPassword;
+    EditText mInputEmail, mInputPassword, mInputUsername;
+    Button mRegister, mSignInLinkBtn;
+    String mEmail, mPassword, mUserName;
+    FirebaseAuth mFirebaseAuth;
+    Boolean mEditTextStatus, mCheckPassword;
+    ImageButton mShowPassword;
     private DatabaseReference mDatabase;
 
     @Override
@@ -45,45 +47,45 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        inputEmail = findViewById(R.id.register_email);
-        inputPassword = findViewById(R.id.register_password);
-        inputUsername = findViewById(R.id.register_username);
-        Register = findViewById(R.id.btnRegister);
-        SignInLinkBtn = findViewById(R.id.btnLinkSignIN);
-        showPassword = findViewById(R.id.showPassword);
+        mInputEmail = findViewById(R.id.register_email);
+        mInputPassword = findViewById(R.id.register_password);
+        mInputUsername = findViewById(R.id.register_username);
+        mRegister = findViewById(R.id.btnRegister);
+        mSignInLinkBtn = findViewById(R.id.btnLinkSignIN);
+        mShowPassword = findViewById(R.id.showPassword);
 
         //get Firebase auth Instance
-        firebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         //////////////// Show Password(Visibility) /////////////////////
-        showPassword.setOnTouchListener(new View.OnTouchListener() {
+        mShowPassword.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        showPassword.setImageResource(R.drawable.ic_visibility_off_black_24dp);
-                        inputPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        mShowPassword.setImageResource(R.drawable.ic_visibility_off_black_24dp);
+                        mInputPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         return true;
 
                     case MotionEvent.ACTION_UP:
-                        inputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                        showPassword.setImageResource(R.drawable.ic_visibility_black_24dp);
+                        mInputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        mShowPassword.setImageResource(R.drawable.ic_visibility_black_24dp);
                         return true;
                 }
                 return false;
             }
         });
 
-        Register.setOnClickListener(new View.OnClickListener() {
+        mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //calling method to check EditText is empty or not
                 isValid();
 
                 //if EditText is true
-                if (EditTextStatus) {
-                    if (checkPassword) {
+                if (mEditTextStatus) {
+                    if (mCheckPassword) {
                         UserRegistrationFunction();
                     }
                 } else {
@@ -92,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        SignInLinkBtn.setOnClickListener(new View.OnClickListener() {
+        mSignInLinkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -102,23 +104,35 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void UserRegistrationFunction() {
-        firebaseAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+        mFirebaseAuth.createUserWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    final String emailInfo = inputEmail.getText().toString();
-                    final String uId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    final String emailInfo = mInputEmail.getText().toString();
+                    FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase.child("Users").child(uId).child("name").setValue(userName);
+                    if(fUser != null) {
+                        String uId = fUser.getUid();
 
-                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("Email", emailInfo);
-                    editor.apply();
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mDatabase.child("users").child(uId).child("name").setValue(mUserName);
+                        mDatabase.child("users").child(uId).child("totalEntries").setValue(0);
 
-                    startActivity(new Intent(RegisterActivity.this, HomeScreen.class));
-                    finish();
+                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().
+                                setDisplayName(mUserName).
+                                build();
+
+                        fUser.updateProfile(profileUpdate);
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("Email", emailInfo);
+                        editor.apply();
+
+                        startActivity(new Intent(RegisterActivity.this, HomeScreen.class));
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Unknown Error Occurred", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     try {
                         throw Objects.requireNonNull(task.getException());
@@ -139,22 +153,22 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void isValid() {
-        Email = inputEmail.getText().toString().trim();
-        Password = inputPassword.getText().toString().trim();
-        userName = inputUsername.getText().toString().trim();
+        mEmail = mInputEmail.getText().toString().trim();
+        mPassword = mInputPassword.getText().toString().trim();
+        mUserName = mInputUsername.getText().toString().trim();
 
-        if (TextUtils.isEmpty(Email) || TextUtils.isEmpty(Password) || TextUtils.isEmpty(userName)) {
-            EditTextStatus = false;
+        if (TextUtils.isEmpty(mEmail) || TextUtils.isEmpty(mPassword) || TextUtils.isEmpty(mUserName)) {
+            mEditTextStatus = false;
         } else {
-            EditTextStatus = true;
+            mEditTextStatus = true;
         }
 
-        if (!TextUtils.isEmpty(Password)) {
-            if (Password.length() <= 8) {
-                checkPassword = false;
+        if (!TextUtils.isEmpty(mPassword)) {
+            if (mPassword.length() <= 8) {
+                mCheckPassword = false;
                 Toast.makeText(RegisterActivity.this, "Password too short, enter minimum 6 character", Toast.LENGTH_LONG).show();
             } else {
-                checkPassword = true;
+                mCheckPassword = true;
             }
         }
     }
