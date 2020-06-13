@@ -12,7 +12,6 @@ public class Entry {
     public String isInstalled;
     public String isRegistered;
     public String isRated;
-    public String checkaCommot;
 
     public Entry() {}
 
