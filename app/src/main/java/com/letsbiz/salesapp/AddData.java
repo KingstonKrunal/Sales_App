@@ -75,16 +75,17 @@ public class AddData extends AppCompatActivity {
                 newEntry.setRatings(mRatingBar.getRating());
 
 
-
                 String invalidFields = newEntry.invalidFields();
-                if(invalidFields.isEmpty()) {
+                if(!invalidFields.isEmpty()) {
                     Toast.makeText(AddData.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 mDatabase.child("entries").push().setValue(newEntry).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(AddData.this, "Entry done", Toast.LENGTH_SHORT).show();
+
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
