@@ -30,14 +30,6 @@ public class AddData extends AppCompatActivity implements AdapterView.OnItemSele
 
         shopCategoryArray = getResources().getStringArray(R.array.shopCategory);
 
-//        List shopCategoryList = new ArrayList(shopCategoryArray.length);
-//
-//        for (String s:shopCategoryArray) {
-//            shopCategoryList.add(s);
-//        }
-//
-//        Collections.sort(shopCategoryList);
-
         mShopName = findViewById(R.id.shopNameEditText);
         mShopOwnerName = findViewById(R.id.shopOwnerNameEdittext);
         mShopCategorySpinner = findViewById(R.id.shopCategorySpinner);
@@ -67,8 +59,9 @@ public class AddData extends AppCompatActivity implements AdapterView.OnItemSele
                 newEntry.setIsRated(mRateQueSpinner.getSelectedItem().toString());
 
                 String invalidFileds = newEntry.invalidFilds();
-                if(invalidFileds.isEmpty())
+                if(!invalidFileds.isEmpty()) {
                     Toast.makeText(AddData.this, "Please enter " + invalidFileds, Toast.LENGTH_SHORT).show();
+                }
 
                 mDatabase.child("entries").push().setValue(newEntry);
 

@@ -12,7 +12,6 @@ public class Entry {
     public String isInstalled;
     public String isRegistered;
     public String isRated;
-    public String checkaCommot;
 
     public Entry() {}
 
@@ -29,8 +28,8 @@ public class Entry {
 
     public String invalidFilds() {
         String res = "";
-        if (shopName.isEmpty()) res = "Shop name";
-        if(ownerName.isEmpty()) res = (res.isEmpty() ? "" : " and ") + "Owner name";
+        if (shopName != null && shopName.isEmpty()) res = "Shop name";
+        if(ownerName != null && ownerName.isEmpty()) res = (res.isEmpty() ? "" : " and ") + "Owner name";
 
         return res;
     }
