@@ -4,19 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AddData extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    EditText shopName, shopOwnerName, theirSugg, yourSugg;
-    Spinner shopCategorySpinner, downloadQueSpinner, regQueSpinner, rateQueSpinner;
-    Button saveButton;
+    EditText mShopName, mShopOwnerName, mTheirSugg, mYourSugg;
+    Spinner mShopCategorySpinner, mDownloadQueSpinner, mRegQueSpinner, mRateQueSpinner;
+    Button mSaveButton;
     private DatabaseReference mDatabase;
 
     String[] shopCategoryArray;
@@ -36,23 +38,40 @@ public class AddData extends AppCompatActivity implements AdapterView.OnItemSele
 //
 //        Collections.sort(shopCategoryList);
 
-        shopName = findViewById(R.id.shopNameEditText);
-        shopOwnerName = findViewById(R.id.shopOwnerNameEdittext);
-        shopCategorySpinner = findViewById(R.id.shopCategorySpinner);
-        theirSugg = findViewById(R.id.theirSuggEditText);
-        yourSugg = findViewById(R.id.yourSuggEditText);
-        downloadQueSpinner = findViewById(R.id.downloadQueSpinner);
-        regQueSpinner = findViewById(R.id.regSpinner);
-        rateQueSpinner = findViewById(R.id.rateSpinner);
-        saveButton = findViewById(R.id.saveButton);
+        mShopName = findViewById(R.id.shopNameEditText);
+        mShopOwnerName = findViewById(R.id.shopOwnerNameEdittext);
+        mShopCategorySpinner = findViewById(R.id.shopCategorySpinner);
+        mTheirSugg = findViewById(R.id.theirSuggEditText);
+        mYourSugg = findViewById(R.id.yourSuggEditText);
+        mDownloadQueSpinner = findViewById(R.id.downloadQueSpinner);
+        mRegQueSpinner = findViewById(R.id.regSpinner);
+        mRateQueSpinner = findViewById(R.id.rateSpinner);
+        mSaveButton = findViewById(R.id.saveButton);
 
-        shopCategorySpinner.setOnItemSelectedListener(this);
+        mShopCategorySpinner.setOnItemSelectedListener(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String err = "";
+                Entry  newEntry = new Entry();
+                newEntry.setShopName(mShopName.getText().toString());
+                newEntry.setOwnerName(mShopOwnerName.getText().toString());
+                newEntry.setShopCategory(mShopCategorySpinner.getSelectedItem().toString());
+                newEntry.setShopOwnerSug(mTheirSugg.getText().toString());
+                newEntry.setUserSug(mYourSugg.getText().toString());
+                newEntry.setIsInstalled(mDownloadQueSpinner.getSelectedItem().toString());
+                newEntry.setIsRegistered(mRegQueSpinner.getSelectedItem().toString());
+                newEntry.setIsRated(mRateQueSpinner.getSelectedItem().toString());
+
+                String invalidFileds = newEntry.invalidFilds();
+                if(invalidFileds.isEmpty())
+                    Toast.makeText(AddData.this, "Please enter " + invalidFileds, Toast.LENGTH_SHORT).show();
+
+                mDatabase.child("entries").push().setValue(newEntry);
+
                 startActivity(new Intent(AddData.this, HomeScreen.class));
                 finish();
             }
@@ -61,7 +80,7 @@ public class AddData extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String categoryData = (String) shopCategorySpinner.getSelectedItem();
+//        String categoryData = (String) shopCategorySpinner.getSelectedItem();
     }
 
     @Override
