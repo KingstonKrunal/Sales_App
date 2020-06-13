@@ -11,11 +11,11 @@ public class Entry {
     public String userSug;
     public String isInstalled;
     public String isRegistered;
-    public String isRated;
+    public float ratings;
 
     public Entry() {}
 
-    public Entry(String shopName, String ownerName, String shopCategory, String shopOwnerSug, String userSug, String isInstalled, String isRegistered, String isRated) {
+    public Entry(String shopName, String ownerName, String shopCategory, String shopOwnerSug, String userSug, String isInstalled, String isRegistered, float ratings) {
         this.shopName = shopName;
         this.ownerName = ownerName;
         this.shopCategory = shopCategory;
@@ -23,7 +23,7 @@ public class Entry {
         this.userSug = userSug.isEmpty() ? "None" : userSug;
         this.isInstalled = isInstalled;
         this.isRegistered = isRegistered;
-        this.isRated = isRated;
+        this.ratings = ratings;
     }
 
     public String invalidFields() {
@@ -62,7 +62,7 @@ public class Entry {
         this.isRegistered = isRegistered;
     }
 
-    public void setIsRated(String isRated) {
-        this.isRated = isRated;
+    public void setRatings(float ratings) {
+        this.ratings = ratings;
     }
 }

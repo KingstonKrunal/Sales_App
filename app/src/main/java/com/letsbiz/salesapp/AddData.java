@@ -3,13 +3,13 @@ package com.letsbiz.salesapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,9 +20,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AddData extends AppCompatActivity {
-    EditText mShopName, mShopOwnerName, mTheirSugg, mYourSugg;
-    Spinner mShopCategorySpinner, mDownloadQueSpinner, mRegQueSpinner, mRateQueSpinner;
+    EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug;
+    Spinner mShopCategorySpinner;
     Button mSaveButton;
+    RadioGroup mAppDownloadedRadioG, mRegisteredRadioG;
+    RatingBar mRatingBar;
     ProgressBar mProgressBar;
     private DatabaseReference mDatabase;
 
@@ -38,13 +40,13 @@ public class AddData extends AppCompatActivity {
         mShopName = findViewById(R.id.shopNameEditText);
         mShopOwnerName = findViewById(R.id.shopOwnerNameEdittext);
         mShopCategorySpinner = findViewById(R.id.shopCategorySpinner);
-        mTheirSugg = findViewById(R.id.theirSuggEditText);
-        mYourSugg = findViewById(R.id.yourSuggEditText);
-        mDownloadQueSpinner = findViewById(R.id.downloadQueSpinner);
-        mRegQueSpinner = findViewById(R.id.regSpinner);
-        mRateQueSpinner = findViewById(R.id.rateSpinner);
+        mOwnerSug = findViewById(R.id.theirSuggEditText);
+        mUserSug = findViewById(R.id.yourSuggEditText);
         mSaveButton = findViewById(R.id.saveButton);
         mProgressBar = findViewById(R.id.progressBar);
+        mRegisteredRadioG = findViewById(R.id.registeredRadioGroup);
+        mAppDownloadedRadioG = findViewById(R.id.downloadedradioGroup);
+        mRatingBar = findViewById(R.id.ratingBar);
 
         mProgressBar.setActivated(false);
 
@@ -58,19 +60,24 @@ public class AddData extends AppCompatActivity {
                 mProgressBar.setAlpha(1);
                 mProgressBar.setActivated(true);
 
-                String err = "";
                 Entry  newEntry = new Entry();
                 newEntry.setShopName(mShopName.getText().toString());
                 newEntry.setOwnerName(mShopOwnerName.getText().toString());
                 newEntry.setShopCategory(mShopCategorySpinner.getSelectedItem().toString());
-                newEntry.setShopOwnerSug(mTheirSugg.getText().toString());
-                newEntry.setUserSug(mYourSugg.getText().toString());
-                newEntry.setIsInstalled(mDownloadQueSpinner.getSelectedItem().toString());
-                newEntry.setIsRegistered(mRegQueSpinner.getSelectedItem().toString());
-                newEntry.setIsRated(mRateQueSpinner.getSelectedItem().toString());
+                newEntry.setShopOwnerSug(mOwnerSug.getText().toString());
+                newEntry.setUserSug(mUserSug.getText().toString());
+                newEntry.setIsInstalled(
+                        mAppDownloadedRadioG.getCheckedRadioButtonId() == R.id.down_yes ? "Yes" : "No"
+                );
+                newEntry.setIsRegistered(
+                        mRegisteredRadioG.getCheckedRadioButtonId() == R.id.reg_yes ? "Yes" : "No"
+                );
+                newEntry.setRatings(mRatingBar.getRating());
+
+
 
                 String invalidFields = newEntry.invalidFields();
-                if(!invalidFields.isEmpty()) {
+                if(invalidFields.isEmpty()) {
                     Toast.makeText(AddData.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
                 }
 
@@ -88,7 +95,6 @@ public class AddData extends AppCompatActivity {
                         mProgressBar.setActivated(false);
                         mSaveButton.setActivated(true);
                         mSaveButton.setAlpha(1);
-
                     }
                 });
 
