@@ -29,7 +29,7 @@ public class Entry {
     public String invalidFields() {
         String res = "";
         if (shopName == null || shopName.isEmpty()) res = "Shop name";
-        if(ownerName == null || ownerName.isEmpty()) res = (res.isEmpty() ? "" : " and ") + "Owner name";
+        if (ownerName == null || ownerName.isEmpty()) res += (res.isEmpty() ? "" : " and ") + "Owner name";
 
         return res;
     }

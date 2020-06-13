@@ -8,13 +8,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars[0]" />
 
     <TextView
         android:id="@+id/userNameTextView"
@@ -51,6 +51,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="#00FAFAFA"
+        android:tint="#00FFFFFF"
         app:layout_constraintStart_toEndOf="@+id/userNameTextView"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:srcCompat="@android:drawable/ic_menu_edit" />
@@ -74,7 +75,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-medium"
         android:text="23"
-        android:textSize="48sp"
+        android:textSize="60sp"
         android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
