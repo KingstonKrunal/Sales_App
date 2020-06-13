@@ -26,7 +26,7 @@ public class Entry {
         this.isRated = isRated;
     }
 
-    public String invalidFilds() {
+    public String invalidFields() {
         String res = "";
         if (shopName != null && shopName.isEmpty()) res = "Shop name";
         if(ownerName != null && ownerName.isEmpty()) res = (res.isEmpty() ? "" : " and ") + "Owner name";
@@ -34,18 +34,12 @@ public class Entry {
         return res;
     }
 
-    public boolean setShopName(String shopName) {
-        if (shopName.isEmpty()) return false;
-
+    public void setShopName(String shopName) {
         this.shopName = shopName;
-        return true;
     }
 
-    public boolean setOwnerName(String ownerName) {
-        if(ownerName.isEmpty()) return false;
-
+    public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
-        return true;
     }
 
     public void setShopCategory(String shopCategory) {
