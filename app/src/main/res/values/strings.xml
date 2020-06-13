@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Sales App</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="register">Register</string>
+    <string name="log_out">Log Out</string>
+    <string name="sign_up_details">Don\'t have an account?</string>
+    <string name="username">Username</string>
+    <string name="sign_in_link"><u>Sign In</u></string>
+    <string name="have_an_account">Have an account?</string>
+    <string name="chooseshopCategory">Choose shop Category</string>
+
+    <string-array name="shopCategory">
+        <item>Baker</item>
+        <item>Books</item>
+        <item>Chemist</item>
+        <item>Clothes</item>
+        <item>Electronics</item>
+        <item>Flowers</item>
+        <item>Grocery</item>
+        <item>Hardware</item>
+        <item>Jewellery</item>
+        <item>News Agency</item>
+        <item>Optician</item>
+        <item>Pet</item>
+        <item>Shoe</item>
+        <item>Stationary</item>
+        <item>Supermarket</item>
+        <item>Toy</item>
+        <item>Travel Agency</item>
+    </string-array>
+
+    <string-array name="yesNo">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+</resources>

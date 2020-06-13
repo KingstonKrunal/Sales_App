@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "983377789022",
+    "firebase_url": "https://letsbiz-sales-app.firebaseio.com",
+    "project_id": "letsbiz-sales-app",
+    "storage_bucket": "letsbiz-sales-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983377789022:android:f1e4b8cccfbbfe7bc574cf",
+        "android_client_info": {
+          "package_name": "com.letsbiz.salesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983377789022-vhrapq6fsiatn91orlob4sngt8nu1jrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMCwZgQk8CTxeW-gjfWJfvDE7iElNXqYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983377789022-vhrapq6fsiatn91orlob4sngt8nu1jrg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
