@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -43,7 +44,7 @@ public class HomeScreen extends AppCompatActivity {
         updateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeScreen.this, UpdateProfileActivity.class));
+                startActivity(new Intent(HomeScreen.this, profile.class));
             }
         });
 
