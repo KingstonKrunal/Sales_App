@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 

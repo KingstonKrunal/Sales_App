@@ -1,6 +1,5 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -13,27 +12,24 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.letsbiz.salesapp.Model.Feedback;
+import com.letsbiz.salesapp.Model.FeedbackSaveListener;
+import com.letsbiz.salesapp.R;
 
-public class AddData extends AppCompatActivity {
+public class AddFeedback extends AppCompatActivity {
     EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug;
     Spinner mShopCategorySpinner;
     Button mSaveButton;
     RadioGroup mAppDownloadedRadioG, mRegisteredRadioG;
     RatingBar mRatingBar;
     ProgressBar mProgressBar;
-    private DatabaseReference mDatabase;
 
     String[] shopCategoryArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_data);
+        setContentView(R.layout.activity_add_feedback);
 
         shopCategoryArray = getResources().getStringArray(R.array.shopCategory);
 
@@ -50,7 +46,6 @@ public class AddData extends AppCompatActivity {
 
         mProgressBar.setActivated(false);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,45 +55,42 @@ public class AddData extends AppCompatActivity {
                 mProgressBar.setAlpha(1);
                 mProgressBar.setActivated(true);
 
-                Entry  newEntry = new Entry();
-                newEntry.setShopName(mShopName.getText().toString());
-                newEntry.setOwnerName(mShopOwnerName.getText().toString());
-                newEntry.setShopCategory(mShopCategorySpinner.getSelectedItem().toString());
-                newEntry.setShopOwnerSug(mOwnerSug.getText().toString());
-                newEntry.setUserSug(mUserSug.getText().toString());
-                newEntry.setIsInstalled(
+                Feedback newFeedback = new Feedback();
+                newFeedback.setShopName(mShopName.getText().toString());
+                newFeedback.setOwnerName(mShopOwnerName.getText().toString());
+                newFeedback.setShopCategory(mShopCategorySpinner.getSelectedItem().toString());
+                newFeedback.setShopOwnerSug(mOwnerSug.getText().toString());
+                newFeedback.setUserSug(mUserSug.getText().toString());
+                newFeedback.setIsInstalled(
                         mAppDownloadedRadioG.getCheckedRadioButtonId() == R.id.down_yes ? "Yes" : "No"
                 );
-                newEntry.setIsRegistered(
+                newFeedback.setIsRegistered(
                         mRegisteredRadioG.getCheckedRadioButtonId() == R.id.reg_yes ? "Yes" : "No"
                 );
-                newEntry.setRatings(mRatingBar.getRating());
+                newFeedback.setRatings(mRatingBar.getRating());
 
-
-                String invalidFields = newEntry.invalidFields();
+                String invalidFields = newFeedback.invalidFields();
                 if(!invalidFields.isEmpty()) {
-                    Toast.makeText(AddData.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeedback.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                mDatabase.child("entries").push().setValue(newEntry).addOnCompleteListener(new OnCompleteListener<Void>() {
+                newFeedback.save(new FeedbackSaveListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(AddData.this, "Entry done", Toast.LENGTH_SHORT).show();
-
+                    public void onSaveComplete() {
+                        Toast.makeText(AddFeedback.this, "Feedback saved", Toast.LENGTH_SHORT).show();
                         finish();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddData.this, "Failed", Toast.LENGTH_SHORT).show();
+                    public void onSaveFailure() {
+                        Toast.makeText(AddFeedback.this, "Check network connection and try again", Toast.LENGTH_SHORT).show();
                         mProgressBar.setAlpha(0);
                         mProgressBar.setActivated(false);
                         mSaveButton.setActivated(true);
                         mSaveButton.setAlpha(1);
                     }
                 });
-
             }
         });
     }

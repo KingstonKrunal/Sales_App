@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class profile extends AppCompatActivity {
+import com.letsbiz.salesapp.R;
+
+public class UserProfile extends AppCompatActivity {
 
     TextView mUserNameTextView, mEmailTextView, mTotalEntriesTextView;
     ImageButton mEditImageButton;
@@ -14,7 +16,7 @@ public class profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_user_profile);
 
         mUserNameTextView = findViewById(R.id.userNameTextView);
         mEmailTextView = findViewById(R.id.emailTextView);

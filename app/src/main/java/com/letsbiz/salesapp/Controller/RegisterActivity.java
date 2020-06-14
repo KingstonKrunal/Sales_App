@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.letsbiz.salesapp.R;
 
 import java.util.Objects;
 

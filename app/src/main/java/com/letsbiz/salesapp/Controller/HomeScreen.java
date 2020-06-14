@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.letsbiz.salesapp.R;
 
 public class HomeScreen extends AppCompatActivity {
     Button logout, updateProfile;
@@ -30,21 +30,21 @@ public class HomeScreen extends AppCompatActivity {
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeScreen.this, AddData.class));
+                startActivity(new Intent(HomeScreen.this, AddFeedback.class));
             }
         });
 
         viewData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeScreen.this, ViewData.class));
+                startActivity(new Intent(HomeScreen.this, FeedbackDetails.class));
             }
         });
 
         updateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeScreen.this, profile.class));
+                startActivity(new Intent(HomeScreen.this, UserProfile.class));
             }
         });
 

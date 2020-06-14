@@ -9,15 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profile"></activity>
-        <activity android:name=".Entries" />
-        <activity android:name=".UpdateProfileActivity" />
-        <activity android:name=".HomeScreen" />
-        <activity android:name=".ViewData" />
-        <activity android:name=".AddData" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Controller.UserProfile"></activity>
+        <activity android:name=".Controller.FeedbackList" />
+        <activity android:name=".Controller.HomeScreen" />
+        <activity android:name=".Controller.FeedbackDetails" />
+        <activity android:name=".Controller.AddFeedback" />
+        <activity android:name=".Controller.RegisterActivity" />
+        <activity android:name=".Controller.LoginActivity" />
+        <activity android:name=".Controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

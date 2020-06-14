@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp;
+package com.letsbiz.salesapp.Controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.letsbiz.salesapp.R;
 
 import java.util.Objects;
 
