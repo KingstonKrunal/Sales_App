@@ -4,92 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/back_secondary"
     tools:context=".Controller.HomeScreen">
-
-    <ImageButton
-        android:id="@+id/addDataImageButton"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="120dp"
-        android:background="@color/sign_up"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Data"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/addDataImageButton"
-        app:layout_constraintEnd_toEndOf="@+id/addDataImageButton"
-        app:layout_constraintStart_toStartOf="@+id/addDataImageButton"
-        app:layout_constraintTop_toTopOf="@+id/addDataImageButton" />
-
-    <ImageButton
-        android:id="@+id/viewDataImageButton"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/sign_up"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Data"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/viewDataImageButton"
-        app:layout_constraintEnd_toEndOf="@+id/viewDataImageButton"
-        app:layout_constraintStart_toStartOf="@+id/viewDataImageButton"
-        app:layout_constraintTop_toTopOf="@+id/viewDataImageButton" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="addDataImageButton,textView" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="textView3,viewDataImageButton" />
 
     <Button
         android:id="@+id/logoutButton"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/sign_up"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#29abe2"
         android:text="@string/log_out"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textAllCaps="true"
+        android:textColor="@color/back_primary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewDataImageButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/updateProfileButton"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
-        android:background="@color/sign_up"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#29abe2"
         android:text="Update Profile"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textAllCaps="true"
+        android:textColor="@color/back_primary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/logoutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="303dp"
+        android:layout_height="109dp"
+        android:layout_marginTop="128dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addDataImageButton" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@color/back_primary" />
+
+    <Button
+        android:id="@+id/addDataImageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#29abe2"
+        android:text="Add new Feedback"
+        android:textColor="@color/back_primary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/viewDataImageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/viewDataImageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#29abe2"
+        android:text="Feedback List"
+        android:textColor="@color/back_primary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/updateProfileButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

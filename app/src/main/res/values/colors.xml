@@ -7,6 +7,7 @@
     <color name="white">#FFFFFF</color>
     <color name="sign_up">#446F88</color>
     <color name="black">#000</color>
-    <color name="view_data_text">#2f4d57</color>
-    <color name="view_data_card_bg">#fcfcfc</color>
+    <color name="text_primary">#2f4d57</color>
+    <color name="back_primary">#fcfcfc</color>
+    <color name="back_secondary">#d7e5e9</color>
 </resources>
