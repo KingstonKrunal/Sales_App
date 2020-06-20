@@ -1,5 +1,6 @@
 package com.letsbiz.salesapp.Controller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,13 +11,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.protobuf.Any;
 import com.letsbiz.salesapp.Model.Callback;
 import com.letsbiz.salesapp.Model.User;
 import com.letsbiz.salesapp.Model.UserRepository;
 import com.letsbiz.salesapp.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeScreen extends AppCompatActivity {
     Button mLogoutBtn, mViewProfileBtn;
@@ -78,13 +87,27 @@ public class HomeScreen extends AppCompatActivity {
 
             @Override
             public void onError(Object object) {
+                Exception ex = (Exception) object;
+                Toast.makeText(HomeScreen.this, ex.getMessage(), Toast.LENGTH_LONG).show();
+                System.out.println(ex.getStackTrace());
+            }
+        });
 
+        Map<String, ArrayList<String>> map = new HashMap<>();
+        ArrayList<String> ar = new ArrayList<>();
+        ar.add("new Arr");
+        ar.add("adasdad");
+        ar.add("asdadasd");
+        map.put("feedbackids", ar);
+
+        FirebaseFirestore.getInstance().collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(HomeScreen.this, task.isCanceled() ? "error" : "successfull", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-//    public void onBackPressed(){
-//        finish();
-//        System.exit(0);
-//    }
 }
+

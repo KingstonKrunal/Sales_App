@@ -27,8 +27,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.letsbiz.salesapp.R;
 
 import java.util.Objects;
@@ -41,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     Boolean mEditTextStatus, mCheckPassword;
     ImageButton mShowPassword;
-    private DatabaseReference mDatabase;
+//    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +112,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if(fUser != null) {
                         String uId = fUser.getUid();
-
-                        mDatabase = FirebaseDatabase.getInstance().getReference();
-                        mDatabase.child("users").child(uId).child("name").setValue(mUserName);
-                        mDatabase.child("users").child(uId).child("totalEntries").setValue(0);
+//
+//                        mDatabase = FirebaseDatabase.getInstance().getReference();
+//                        mDatabase.child("users").child(uId).child("name").setValue(mUserName);
+//                        mDatabase.child("users").child(uId).child("totalEntries").setValue(0);
 
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().
                                 setDisplayName(mUserName).
