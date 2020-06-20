@@ -7,47 +7,69 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.ServerTimestamp;
 
-@IgnoreExtraProperties
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Map;
+
 public class Feedback {
-    public String shopName;
-    public String ownerName;
-    public String shopCategory;
-    public String shopOwnerSug;
-    public String userSug;
-    public String isInstalled;
-    public String isRegistered;
-    public float ratings;
-    public String uid;
+    private String shopName;
+    private String ownerName;
+    private String shopCategory;
+    private String shopOwnerSug;
+    private String userSug;
+    private String isInstalled;
+    private String isRegistered;
+    private String uid;
+    private float ratings;
+    @ServerTimestamp private long timestamp;
 
     public Feedback() {
     }
 
-//    public Feedback(String shopName, String ownerName, String shopCategory, String shopOwnerSug, String userSug, String isInstalled, String isRegistered, float ratings) {
-//        this.shopName = shopName;
-//        this.ownerName = ownerName;
-//        this.shopCategory = shopCategory;
-//        this.shopOwnerSug = shopOwnerSug.isEmpty() ? "None" : shopOwnerSug;
-//        this.userSug = userSug.isEmpty() ? "None" : userSug;
-//        this.isInstalled = isInstalled;
-//        this.isRegistered = isRegistered;
-//        this.ratings = ratings;
-//    }
+    public String getShopName() {
+        return shopName;
+    }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
 
-    public String invalidFields() {
-        String res = "";
-        if (shopName == null || shopName.isEmpty()) res = "Shop name";
-        if (ownerName == null || ownerName.isEmpty())
-            res += (res.isEmpty() ? "" : " and ") + "Owner name";
+    public String getShopCategory() {
+        return shopCategory;
+    }
 
-        return res;
+    public String getShopOwnerSug() {
+        return shopOwnerSug;
+    }
+
+    public String getUserSug() {
+        return userSug;
+    }
+
+    public String getIsInstalled() {
+        return isInstalled;
+    }
+
+    public String getIsRegistered() {
+        return isRegistered;
+    }
+
+    public float getRatings() {
+        return ratings;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public void setShopName(String shopName) {
@@ -82,53 +104,74 @@ public class Feedback {
         this.ratings = ratings;
     }
 
-    public void save(final FeedbackSaveListener helper) {
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null) {
-            return;
-        }
+    public String getFormattedDate() {
+        Date date = new Date(timestamp);
 
-        uid = firebaseUser.getUid();
+        String res = "";
+        res += DateFormat.getDateInstance(DateFormat.MEDIUM).format(date) + " ";
+        res += DateFormat.getTimeInstance(DateFormat.SHORT).format(date);
 
-        final String key = mDatabase.child("feedback").push().getKey();
-        mDatabase.child("feedback").child(key).setValue(this).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                mDatabase.child("users")
-                        .child(uid)
-                        .child("noOfFeedback")
-                        .addListenerForSingleValueEvent(
-                                new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        mDatabase.child("users")
-                                                .child(uid)
-                                                .child("noOfFeedback")
-                                                .setValue((int) dataSnapshot.getValue() + 1);
-
-                                        mDatabase.child("users")
-                                                .child(uid)
-                                                .child("feedbackIds")
-                                                .child(key)
-                                                .setValue(true);
-
-                                        helper.onSaveComplete();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        //TODO: Save it offline
-                                    }
-                                }
-                        );
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.onSaveFailure();
-            }
-        });
+        return res;
     }
+
+    public String invalidFields() {
+        String res = "";
+        if (shopName == null || shopName.isEmpty()) res = "Shop name";
+        if (ownerName == null || ownerName.isEmpty())
+            res += (res.isEmpty() ? "" : " and ") + "Owner name";
+
+        return res;
+    }
+//
+//    public void save(final Callback helper) {
+//        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (firebaseUser == null) {
+//            return;
+//        }
+//
+//        uid = firebaseUser.getUid();
+//
+//        timestamp = System.currentTimeMillis()/1000;
+//
+//        final String key = mDatabase.child("feedback").push().getKey();
+//        mDatabase.child("feedback").child(key).setValue(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                mDatabase.child("users")
+//                        .child(uid)
+//                        .child("noOfFeedback")
+//                        .addListenerForSingleValueEvent(
+//                                new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                        mDatabase.child("users")
+//                                                .child(uid)
+//                                                .child("noOfFeedback")
+//                                                .setValue((int) dataSnapshot.getValue() + 1);
+//
+//                                        mDatabase.child("users")
+//                                                .child(uid)
+//                                                .child("feedbackIds")
+//                                                .child(key)
+//                                                .setValue(true);
+//
+//                                        helper.onSuccess(null);
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                        //TODO: Save it offline
+//                                    }
+//                                }
+//                        );
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                helper.onError(null);
+//            }
+//        });
+//    }
 }
 

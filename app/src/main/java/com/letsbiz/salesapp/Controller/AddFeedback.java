@@ -13,7 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.letsbiz.salesapp.Model.Feedback;
-import com.letsbiz.salesapp.Model.FeedbackSaveListener;
+import com.letsbiz.salesapp.Model.Callback;
 import com.letsbiz.salesapp.R;
 
 public class AddFeedback extends AppCompatActivity {
@@ -75,22 +75,22 @@ public class AddFeedback extends AppCompatActivity {
                     return;
                 }
 
-                newFeedback.save(new FeedbackSaveListener() {
-                    @Override
-                    public void onSaveComplete() {
-                        Toast.makeText(AddFeedback.this, "Feedback saved", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onSaveFailure() {
-                        Toast.makeText(AddFeedback.this, "Check network connection and try again", Toast.LENGTH_SHORT).show();
-                        mProgressBar.setAlpha(0);
-                        mProgressBar.setActivated(false);
-                        mSaveButton.setActivated(true);
-                        mSaveButton.setAlpha(1);
-                    }
-                });
+//                newFeedback.save(new Callback() {
+//                    @Override
+//                    public void onSuccess(Object object) {
+//                        Toast.makeText(AddFeedback.this, "Feedback saved", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void onError(Object object) {
+//                        Toast.makeText(AddFeedback.this, "Check network connection and try again", Toast.LENGTH_SHORT).show();
+//                        mProgressBar.setAlpha(0);
+//                        mProgressBar.setActivated(false);
+//                        mSaveButton.setActivated(true);
+//                        mSaveButton.setAlpha(1);
+//                    }
+//                });
             }
         });
     }

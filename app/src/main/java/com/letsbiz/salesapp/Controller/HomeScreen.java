@@ -8,47 +8,52 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.letsbiz.salesapp.Model.Callback;
+import com.letsbiz.salesapp.Model.User;
+import com.letsbiz.salesapp.Model.UserRepository;
 import com.letsbiz.salesapp.R;
 
 public class HomeScreen extends AppCompatActivity {
-    Button logout, updateProfile;
-    ImageButton addData, viewData;
+    Button mLogoutBtn, mViewProfileBtn;
+    Button mAddFeedbackBtn, mViewFeedbackListBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        addData = findViewById(R.id.addDataImageButton);
-        viewData = findViewById(R.id.viewDataImageButton);
-        logout = findViewById(R.id.logoutButton);
-        updateProfile = findViewById(R.id.updateProfileButton);
+        mAddFeedbackBtn = findViewById(R.id.add_feedback_btn);
+        mViewFeedbackListBtn = findViewById(R.id.view_feedback_list_btn);
+        mLogoutBtn = findViewById(R.id.log_out_btn);
+        mViewProfileBtn = findViewById(R.id.view_profile_btn);
 
-        addData.setOnClickListener(new View.OnClickListener() {
+        mAddFeedbackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeScreen.this, AddFeedback.class));
             }
         });
 
-        viewData.setOnClickListener(new View.OnClickListener() {
+        mViewFeedbackListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeScreen.this, FeedbackDetails.class));
             }
         });
 
-        updateProfile.setOnClickListener(new View.OnClickListener() {
+        mViewProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeScreen.this, UserProfile.class));
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        mLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -60,6 +65,20 @@ public class HomeScreen extends AppCompatActivity {
 
                 startActivity(new Intent(HomeScreen.this, LoginActivity.class));
                 finish();
+            }
+        });
+
+        UserRepository ur = new UserRepository();
+        ur.readAllUserFeedbackIdsBySingleValueEvent(new Callback() {
+            @Override
+            public void onSuccess(Object object) {
+                DocumentSnapshot ds = (DocumentSnapshot) object;
+                Toast.makeText(HomeScreen.this, ds.get("feedbackIDs").toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Object object) {
+
             }
         });
     }
