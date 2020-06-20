@@ -1,16 +1,17 @@
 package com.letsbiz.salesapp.Model
 
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
-class UserRepository {
+class UserRepository(val user: FirebaseUser) {
     private val FEEDBACK_COUNT = "feedbackCount"
     val FEEDBACK_REFS = "feedbackids"
+
     private val userRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.USERS)
-            .document("userui1")
+            .document(user.uid)
 
     fun updateUserName(name: String?, callback: Callback) {
         val user = FirebaseAuth.getInstance().currentUser
@@ -47,7 +48,7 @@ class UserRepository {
     fun readAllUserFeedbackIdsBySingleValueEvent(callback: Callback?) {
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                callback?.onError(documentSnapshot);
+                callback?.onSuccess(documentSnapshot);
             }
         }
         .addOnFailureListener {
