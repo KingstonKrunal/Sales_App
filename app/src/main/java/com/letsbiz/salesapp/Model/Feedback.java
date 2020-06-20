@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Feedback {
@@ -121,6 +122,20 @@ public class Feedback {
             res += (res.isEmpty() ? "" : " and ") + "Owner name";
 
         return res;
+    }
+
+    public Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("shopName", shopName);
+        map.put("ownerName", ownerName);
+        map.put("shopCategory", shopCategory);
+        map.put("shopOwnerSug", shopOwnerSug);
+        map.put("userSug", userSug);
+        map.put("isInstalled", isInstalled);
+        map.put("isRegistered", isRegistered);
+        map.put("ratings", ratings);
+
+        return map;
     }
 //
 //    public void save(final Callback helper) {

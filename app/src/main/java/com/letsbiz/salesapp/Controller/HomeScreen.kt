@@ -50,27 +50,5 @@ class HomeScreen : AppCompatActivity() {
             startActivity(Intent(this@HomeScreen, LoginActivity::class.java))
             finish()
         })
-
-        val user = FirebaseAuth.getInstance().currentUser
-        if(user != null) {
-            val ur = UserRepository(user)
-            ur.readAllUserFeedbackIdsBySingleValueEvent(object : Callback {
-                override fun onSuccess(`object`: Any) {
-                    val ds = `object` as DocumentSnapshot
-                    val feedbackArray = ds["feedbackids"] as ArrayList<*>
-                    feedbackArray.forEach {
-                        if(it is String) {
-                            Toast.makeText(this@HomeScreen, it, Toast.LENGTH_LONG);
-                        }
-                    }
-                }
-
-                override fun onError(`object`: Any) {
-                    val ex = `object` as Exception
-                    Toast.makeText(this@HomeScreen, ex.message, Toast.LENGTH_LONG).show()
-                    println(ex.stackTrace)
-                }
-            })
-        }
     }
 }

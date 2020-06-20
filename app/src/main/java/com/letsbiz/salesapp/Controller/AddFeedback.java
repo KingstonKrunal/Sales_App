@@ -12,8 +12,11 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.letsbiz.salesapp.Model.Feedback;
 import com.letsbiz.salesapp.Model.Callback;
+import com.letsbiz.salesapp.Model.FeedbackRepository;
 import com.letsbiz.salesapp.R;
 
 public class AddFeedback extends AppCompatActivity {
@@ -75,22 +78,29 @@ public class AddFeedback extends AppCompatActivity {
                     return;
                 }
 
-//                newFeedback.save(new Callback() {
-//                    @Override
-//                    public void onSuccess(Object object) {
-//                        Toast.makeText(AddFeedback.this, "Feedback saved", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onError(Object object) {
-//                        Toast.makeText(AddFeedback.this, "Check network connection and try again", Toast.LENGTH_SHORT).show();
-//                        mProgressBar.setAlpha(0);
-//                        mProgressBar.setActivated(false);
-//                        mSaveButton.setActivated(true);
-//                        mSaveButton.setAlpha(1);
-//                    }
-//                });
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null) {
+                    Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
+                    //TODO: Stop app here
+                    return;
+                }
+                FeedbackRepository repository = new FeedbackRepository(user);
+                repository.createFeedback(newFeedback, new Callback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Object object) {
+                        Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
+                        mSaveButton.setAlpha(1);
+                        mSaveButton.setActivated(true);
+                        mProgressBar.setAlpha(0);
+                        mProgressBar.setActivated(false);
+                    }
+                });
+
             }
         });
     }
