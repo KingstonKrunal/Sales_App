@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent i = new Intent(MainActivity.this, HomeScreen.class);
                         startActivity(i);
                     }
+                    finish();
                 }
 
                 @Override
@@ -61,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
-//        finish();
     }
 
     void checkIfAdmin(final Callback callback) {
