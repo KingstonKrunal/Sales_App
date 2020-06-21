@@ -78,12 +78,13 @@ public class MainActivity extends AppCompatActivity {
                             for (String key:
                                     adminDoc.adminUids) {
                                 if(key.equals(User.getUID())) {
+                                    // TODO: Add that data persistence
                                     callback.onSuccess(true);
                                     return;
                                 }
                             }
                         }
-
+                        // TODO: Add that data persistence
                         callback.onSuccess(false);
                     }
                 })
