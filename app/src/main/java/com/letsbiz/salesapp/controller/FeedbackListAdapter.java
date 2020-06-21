@@ -1,6 +1,5 @@
-package com.letsbiz.salesapp.Controller;
+package com.letsbiz.salesapp.controller;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.letsbiz.salesapp.Model.Feedback;
+import com.letsbiz.salesapp.model.Feedback;
 import com.letsbiz.salesapp.R;
 
 import java.text.DateFormat;
 
 public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, FeedbackListAdapter.ViewHolder> {
 
-    private OnEditButtonClickListener listener;
+    private FeedbackAdapterClickListeners listener;
 
     public FeedbackListAdapter(@NonNull FirestoreRecyclerOptions<Feedback> options) {
         super(options);
@@ -36,14 +35,17 @@ public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, Feed
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Feedback model) {
         holder.shopNameText.setText(model.getShopName());
-        String res = "";
-        res += DateFormat.getDateInstance(DateFormat.MEDIUM).format(model.getDate()) + " ";
-        res += DateFormat.getTimeInstance(DateFormat.SHORT).format(model.getDate());
+        String res = "Not added to servers";
+        if(model.getDate() != null) {
+            res = DateFormat.getDateInstance(DateFormat.MEDIUM).format(model.getDate()) + " ";
+            res += DateFormat.getTimeInstance(DateFormat.SHORT).format(model.getDate());
+        }
+
         holder.dateAddedText.setText(res);
         holder.ownerNameText.setText(model.getOwnerName());
     }
 
-    public void deleteItem(int position) {
+    public void deleteItem(final int position) {
         getSnapshots().getSnapshot(position).getReference().delete();
     }
 
@@ -63,18 +65,29 @@ public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, Feed
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onClickedListener(getSnapshots().getSnapshot(position), position);
+                        listener.onEditClickedListener(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onViewClickedListener(getSnapshots().getSnapshot(position), position);
                     }
                 }
             });
         }
     }
 
-    public interface OnEditButtonClickListener {
-        void onClickedListener(DocumentSnapshot documentSnapshot, int position);
+    public interface FeedbackAdapterClickListeners {
+        void onEditClickedListener(DocumentSnapshot documentSnapshot, int position);
+        void onViewClickedListener(DocumentSnapshot documentSnapshot, int position);
     }
 
-    public void setOnEditButtonClickListener(OnEditButtonClickListener listener) {
+    public void setFeedbackAdapterClickListeners(FeedbackAdapterClickListeners listener) {
         this.listener = listener;
     }
 }

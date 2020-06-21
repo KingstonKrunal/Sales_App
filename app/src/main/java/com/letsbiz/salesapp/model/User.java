@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp.Model;
+package com.letsbiz.salesapp.model;
 
 public class User {
     private static boolean isAdmin;

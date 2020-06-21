@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back_primary"
-    tools:context=".Controller.UserProfile">
+    tools:context=".controller.UserProfile">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView6"
@@ -32,16 +32,15 @@
                 app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 
             <ImageButton
-                android:id="@+id/editNameImageBtn"
+                android:id="@+id/imgBtnEditName"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
                 android:background="#00FAFAFA"
-                android:tint="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/userNameTextView"
                 app:layout_constraintStart_toEndOf="@+id/userNameTextView"
                 app:layout_constraintTop_toTopOf="@+id/userNameTextView"
-                app:srcCompat="@android:drawable/ic_menu_edit" />
+                app:srcCompat="@drawable/baseline_edit_24" />
 
             <TextView
                 android:id="@+id/userNameTextView"

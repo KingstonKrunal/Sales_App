@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp.Model;
+package com.letsbiz.salesapp.model;
 
 import androidx.annotation.NonNull;
 

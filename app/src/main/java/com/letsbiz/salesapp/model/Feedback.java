@@ -1,21 +1,13 @@
-package com.letsbiz.salesapp.Model;
+package com.letsbiz.salesapp.model;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.text.DateFormat;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Feedback {
+public class Feedback implements Serializable {
     private String shopName;
     private String ownerName;
     private String shopCategory;

@@ -1,4 +1,4 @@
-package com.letsbiz.salesapp.Controller;
+package com.letsbiz.salesapp.controller;
 
 import android.content.Context;
 import android.content.Intent;

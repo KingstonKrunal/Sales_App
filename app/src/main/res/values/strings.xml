@@ -14,6 +14,20 @@
     <string name="chooseshopCategory">Choose shop Category</string>
     <string name="close">Close</string>
     <string name="select_option">Select Option</string>
+    <string name="shop_name">Shop Name</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="category">Category</string>
+    <string name="registered">Registered</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="installed">Downloaded</string>
+    <string name="ratings">Ratings</string>
+    <string name="owner_suggestion">Owner\'s Suggestions</string>
+    <string name="your_suggestion">Your\'s Suggestions</string>
+    <string name="save">Save</string>
+    <string name="write_suggestions">Suggestion</string>
+    <string name="register_quest">Did they register as a seller?</string>
+    <string name="download_ques">Did they download the application?</string>
 
     <string-array name="shopCategory">
         <item>Baker</item>

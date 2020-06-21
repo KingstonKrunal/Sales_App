@@ -1,10 +1,8 @@
-package com.letsbiz.salesapp.Model
+package com.letsbiz.salesapp.model
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserRepository(val user: FirebaseUser) {

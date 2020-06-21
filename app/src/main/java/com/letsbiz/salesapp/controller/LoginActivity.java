@@ -1,8 +1,6 @@
-package com.letsbiz.salesapp.Controller;
+package com.letsbiz.salesapp.controller;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -26,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.letsbiz.salesapp.Model.User;
+import com.letsbiz.salesapp.model.User;
 import com.letsbiz.salesapp.R;
 
 import java.util.Objects;

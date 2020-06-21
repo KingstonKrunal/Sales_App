@@ -1,9 +1,8 @@
-package com.letsbiz.salesapp.Controller;
+package com.letsbiz.salesapp.controller;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

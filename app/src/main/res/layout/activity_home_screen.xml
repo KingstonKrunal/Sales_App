@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#fff"
-    tools:context=".Controller.HomeScreen">
+    tools:context=".controller.HomeScreen">
 
     <Button
         android:id="@+id/log_out_btn"

@@ -1,8 +1,9 @@
-package com.letsbiz.salesapp.Controller;
+package com.letsbiz.salesapp.controller;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,25 +14,25 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.letsbiz.salesapp.Model.Feedback;
-import com.letsbiz.salesapp.Model.Callback;
-import com.letsbiz.salesapp.Model.FeedbackRepository;
+import com.letsbiz.salesapp.model.Feedback;
+import com.letsbiz.salesapp.model.Callback;
+import com.letsbiz.salesapp.model.FeedbackRepository;
 import com.letsbiz.salesapp.R;
+import com.letsbiz.salesapp.model.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
 public class AddFeedback extends AppCompatActivity {
-    EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug;
-    Spinner mShopCategorySpinner;
+    EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug, mShopCategory;
     Button mSaveButton;
     RadioGroup mAppDownloadedRadioG, mRegisteredRadioG;
     RatingBar mRatingBar;
     ProgressBar mProgressBar;
+
+    private boolean mIsEditing = false;
+    private String mFeedbackKey = "";
 
     String[] shopCategoryArray;
 
@@ -44,7 +45,7 @@ public class AddFeedback extends AppCompatActivity {
 
         mShopName = findViewById(R.id.shopNameEditText);
         mShopOwnerName = findViewById(R.id.shopOwnerNameEdittext);
-        mShopCategorySpinner = findViewById(R.id.shopCategorySpinner);
+        mShopCategory = findViewById(R.id.editTextShopCategory);
         mOwnerSug = findViewById(R.id.theirSuggEditText);
         mUserSug = findViewById(R.id.yourSuggEditText);
         mSaveButton = findViewById(R.id.saveButton);
@@ -55,34 +56,44 @@ public class AddFeedback extends AppCompatActivity {
 
         mProgressBar.setActivated(false);
 
+        ActionBar bar = getSupportActionBar();
+        if(bar != null) {
+            bar.setTitle("New Feedback");
+        }
+
+        setUpListeners();
+
+        setUpFieldValuesIfRequired();
+    }
+
+    void setUpListeners() {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showProgress();
 
-                Feedback newFeedback = new Feedback();
-                newFeedback.setShopName(mShopName.getText().toString());
-                newFeedback.setOwnerName(mShopOwnerName.getText().toString());
-                newFeedback.setShopCategory(mShopCategorySpinner.getSelectedItem().toString());
-                newFeedback.setShopOwnerSug(mOwnerSug.getText().toString());
-                newFeedback.setUserSug(mUserSug.getText().toString());
-                newFeedback.setIsInstalled(
+                Feedback feedback = new Feedback();
+                feedback.setShopName(mShopName.getText().toString());
+                feedback.setOwnerName(mShopOwnerName.getText().toString());
+                feedback.setShopCategory(mShopCategory.getText().toString());
+                feedback.setShopOwnerSug(mOwnerSug.getText().toString());
+                feedback.setUserSug(mUserSug.getText().toString());
+                feedback.setIsInstalled(
                         mAppDownloadedRadioG.getCheckedRadioButtonId() == R.id.down_yes ? "Yes" : "No"
                 );
-                newFeedback.setIsRegistered(
+                feedback.setIsRegistered(
                         mRegisteredRadioG.getCheckedRadioButtonId() == R.id.reg_yes ? "Yes" : "No"
                 );
-                newFeedback.setRatings(mRatingBar.getRating());
+                feedback.setRatings(mRatingBar.getRating());
 
-                String invalidFields = newFeedback.invalidFields();
+                String invalidFields = feedback.invalidFields();
                 if(!invalidFields.isEmpty()) {
                     Toast.makeText(AddFeedback.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
                     hideProgress();
                     return;
                 }
 
-                FeedbackRepository repository = new FeedbackRepository();
-                repository.createFeedback(newFeedback, new Callback() {
+                Callback callback = new Callback() {
                     @Override
                     public void onSuccess(Object object) {
                         finish();
@@ -93,14 +104,40 @@ public class AddFeedback extends AppCompatActivity {
                         Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
                         hideProgress();
                     }
-                });
+                };
+
+                FeedbackRepository repository = new FeedbackRepository();
+
+                if(mIsEditing) {
+                    repository.updateFeedback(mFeedbackKey, feedback, callback);
+                } else {
+                    repository.createFeedback(feedback, callback);
+                }
 
             }
         });
+    }
 
-        ActionBar bar = getSupportActionBar();
-        if(bar != null) {
-            bar.setTitle("New Feedback");
+    void setUpFieldValuesIfRequired() {
+        Intent i = getIntent();
+        String id = i.getStringExtra(FeedbackDetails.FEEDBACK_ID);
+
+        if(!Utility.isEmptyOrNull(id)) {
+            Feedback feedback = (Feedback) i.getSerializableExtra(FeedbackDetails.FEEDBACK);
+            if(feedback == null) return;
+
+            mIsEditing = true;
+            mFeedbackKey = id;
+
+            mShopName.setText(feedback.getShopName());
+            mShopOwnerName.setText(feedback.getOwnerName());
+            mShopCategory.setText(feedback.getShopCategory());
+            mOwnerSug.setText(feedback.getShopOwnerSug()); ;
+            mUserSug.setText(feedback.getUserSug());
+            mRatingBar.setRating(feedback.getRatings());
+
+            mRegisteredRadioG.check(feedback.getIsRegistered().equals("Yes") ? R.id.reg_yes: R.id.reg_no);
+            mAppDownloadedRadioG.check(feedback.getIsInstalled().equals("Yes") ? R.id.down_yes: R.id.down_no);
         }
     }
 
