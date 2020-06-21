@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.ServerTimestamp;
@@ -24,7 +25,7 @@ public class Feedback {
     private String isRegistered;
     private String uid;
     private float ratings;
-    @ServerTimestamp private long timestamp;
+    @ServerTimestamp private Date date;
 
     public Feedback() {
     }
@@ -65,8 +66,8 @@ public class Feedback {
         return uid;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public Date getDate() {
+        return date;
     }
 
     public void setUid(String uid) {
@@ -105,16 +106,6 @@ public class Feedback {
         this.ratings = ratings;
     }
 
-    public String getFormattedDate() {
-        Date date = new Date(timestamp);
-
-        String res = "";
-        res += DateFormat.getDateInstance(DateFormat.MEDIUM).format(date) + " ";
-        res += DateFormat.getTimeInstance(DateFormat.SHORT).format(date);
-
-        return res;
-    }
-
     public String invalidFields() {
         String res = "";
         if (shopName == null || shopName.isEmpty()) res = "Shop name";
@@ -124,7 +115,7 @@ public class Feedback {
         return res;
     }
 
-    public Map<String, Object> getMap() {
+    public Map<String, Object> updatedFeedbackMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("shopName", shopName);
         map.put("ownerName", ownerName);

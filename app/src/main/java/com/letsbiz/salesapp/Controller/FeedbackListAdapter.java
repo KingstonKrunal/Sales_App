@@ -1,5 +1,6 @@
 package com.letsbiz.salesapp.Controller;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.letsbiz.salesapp.Model.Feedback;
 import com.letsbiz.salesapp.R;
+
+import java.text.DateFormat;
 
 public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, FeedbackListAdapter.ViewHolder> {
 
@@ -33,7 +36,10 @@ public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, Feed
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Feedback model) {
         holder.shopNameText.setText(model.getShopName());
-        holder.dateAddedText.setText(model.getFormattedDate());
+        String res = "";
+        res += DateFormat.getDateInstance(DateFormat.MEDIUM).format(model.getDate()) + " ";
+        res += DateFormat.getTimeInstance(DateFormat.SHORT).format(model.getDate());
+        holder.dateAddedText.setText(res);
         holder.ownerNameText.setText(model.getOwnerName());
     }
 

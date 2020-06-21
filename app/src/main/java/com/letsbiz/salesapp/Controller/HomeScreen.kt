@@ -34,7 +34,7 @@ class HomeScreen : AppCompatActivity() {
         })
 
         mViewFeedbackListBtn?.setOnClickListener(View.OnClickListener {
-            startActivity(Intent(this@HomeScreen, FeedbackDetails::class.java))
+            startActivity(Intent(this@HomeScreen, FeedbackList::class.java))
         })
 
         mViewProfileBtn?.setOnClickListener(View.OnClickListener {
@@ -50,5 +50,6 @@ class HomeScreen : AppCompatActivity() {
             startActivity(Intent(this@HomeScreen, LoginActivity::class.java))
             finish()
         })
+
     }
 }

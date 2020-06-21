@@ -1,24 +1,15 @@
 package com.letsbiz.salesapp.Model;
 
-import android.telecom.Call;
-
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
 
 public class FeedbackRepository {
-    private FirebaseUser user;
-
-    public FeedbackRepository(FirebaseUser user) {
-       this.user = user;
-    }
-
     private static CollectionReference feedbackRef = FirebaseFirestore.getInstance()
             .collection(FirebaseConstants.FEEDBACK);
 
@@ -26,19 +17,17 @@ public class FeedbackRepository {
         final String key = feedbackRef.document().getId();
         if(feedback != null && !Utility.isEmptyOrNull(key)) {
 
-            feedback.setUid(user.getUid());
+            feedback.setUid(User.getUID());
 
             feedbackRef.document(key).set(feedback)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            callback.onSuccess(null);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            callback.onError(null);
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                callback.onSuccess(null);
+                            } else {
+                                callback.onError(null);
+                            }
                         }
                     });
         }
@@ -49,7 +38,7 @@ public class FeedbackRepository {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        onSuccess(null);
+                        callback.onSuccess(null);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -61,7 +50,7 @@ public class FeedbackRepository {
     }
 
     public void updateFeedback(String key, Feedback feedback, final Callback callback) {
-        feedbackRef.document(key).update(feedback.getMap())
+        feedbackRef.document(key).update(feedback.updatedFeedbackMap())
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -75,21 +64,5 @@ public class FeedbackRepository {
                 }
             });
     }
-
-    public void readAllFeedback(final Callback callBack){
-        feedbackRef.whereEqualTo("uid", user.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        callBack.onSuccess(queryDocumentSnapshots);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        callBack.onError(e);
-                    }
-                });
-    };
 }
 

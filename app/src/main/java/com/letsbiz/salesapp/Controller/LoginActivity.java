@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.letsbiz.salesapp.Model.User;
 import com.letsbiz.salesapp.R;
 
 import java.util.Objects;
@@ -78,10 +79,14 @@ public class LoginActivity extends AppCompatActivity {
                         password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         showPassword.setImageResource(R.drawable.ic_visibility_black_24dp);
                         return true;
+                    default:
+                        break;
                 }
                 return false;
             }
         });
+
+
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,11 +111,14 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
                                 // saveInfo
-                                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("Email", emailInfo);
-                                editor.putString("Password", String.valueOf(password));
-                                editor.apply();
+//                                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+//                                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                editor.putString("Email", emailInfo);
+//                                editor.putString("Password", String.valueOf(password));
+//                                editor.apply();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user == null) return;
+                                User.setUID(user.getUid());
 
                                 startActivity(new Intent(LoginActivity.this, HomeScreen.class));
                                 finish();

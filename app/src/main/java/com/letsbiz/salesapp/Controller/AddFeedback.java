@@ -1,8 +1,12 @@
 package com.letsbiz.salesapp.Controller;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +22,8 @@ import com.letsbiz.salesapp.Model.Feedback;
 import com.letsbiz.salesapp.Model.Callback;
 import com.letsbiz.salesapp.Model.FeedbackRepository;
 import com.letsbiz.salesapp.R;
+
+import org.jetbrains.annotations.NotNull;
 
 public class AddFeedback extends AppCompatActivity {
     EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug;
@@ -49,14 +55,10 @@ public class AddFeedback extends AppCompatActivity {
 
         mProgressBar.setActivated(false);
 
-
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSaveButton.setAlpha(0);
-                mSaveButton.setActivated(false);
-                mProgressBar.setAlpha(1);
-                mProgressBar.setActivated(true);
+                showProgress();
 
                 Feedback newFeedback = new Feedback();
                 newFeedback.setShopName(mShopName.getText().toString());
@@ -75,16 +77,11 @@ public class AddFeedback extends AppCompatActivity {
                 String invalidFields = newFeedback.invalidFields();
                 if(!invalidFields.isEmpty()) {
                     Toast.makeText(AddFeedback.this, "Please enter " + invalidFields, Toast.LENGTH_SHORT).show();
+                    hideProgress();
                     return;
                 }
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user == null) {
-                    Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
-                    //TODO: Stop app here
-                    return;
-                }
-                FeedbackRepository repository = new FeedbackRepository(user);
+                FeedbackRepository repository = new FeedbackRepository();
                 repository.createFeedback(newFeedback, new Callback() {
                     @Override
                     public void onSuccess(Object object) {
@@ -94,14 +91,46 @@ public class AddFeedback extends AppCompatActivity {
                     @Override
                     public void onError(Object object) {
                         Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
-                        mSaveButton.setAlpha(1);
-                        mSaveButton.setActivated(true);
-                        mProgressBar.setAlpha(0);
-                        mProgressBar.setActivated(false);
+                        hideProgress();
                     }
                 });
 
             }
         });
+
+        ActionBar bar = getSupportActionBar();
+        if(bar != null) {
+            bar.setTitle("New Feedback");
+        }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_feedback_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+        if (item.getItemId() == R.id.close_menu_item) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void showProgress() {
+        mSaveButton.setAlpha(0);
+        mSaveButton.setActivated(false);
+        mProgressBar.setAlpha(1);
+        mProgressBar.setActivated(true);
+    }
+    public void hideProgress() {
+        mSaveButton.setAlpha(1);
+        mSaveButton.setActivated(true);
+        mProgressBar.setAlpha(0);
+        mProgressBar.setActivated(false);
+    }
+
 }

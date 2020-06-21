@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Controller.UserProfile"></activity>
+        <activity android:name=".Controller.UserProfile" />
         <activity android:name=".Controller.FeedbackList" />
         <activity android:name=".Controller.HomeScreen" />
         <activity android:name=".Controller.FeedbackDetails" />

@@ -12,6 +12,8 @@
     <string name="sign_in_link"><u>Sign In</u></string>
     <string name="have_an_account">Have an account?</string>
     <string name="chooseshopCategory">Choose shop Category</string>
+    <string name="close">Close</string>
+    <string name="select_option">Select Option</string>
 
     <string-array name="shopCategory">
         <item>Baker</item>
