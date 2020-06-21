@@ -7,6 +7,16 @@
     android:backgroundTint="#fff"
     tools:context=".controller.HomeScreen">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="82dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/letsbiz_home_logo" />
+
     <Button
         android:id="@+id/log_out_btn"
         android:layout_width="0dp"
@@ -40,17 +50,6 @@
         app:layout_constraintBottom_toTopOf="@+id/log_out_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="191dp"
-        android:layout_height="240dp"
-        android:layout_marginTop="84dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/letsbizlogo" />
 
     <Button
         android:id="@+id/add_feedback_btn"
