@@ -32,38 +32,52 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            User.setUID(user.getUid());
+        Thread splashThread = new Thread() {
+            public void run() {
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            checkIfAdmin(new Callback() {
-                @Override
-                public void onSuccess(Object object) {
-                    boolean isAdmin = (boolean) object;
-                    if(isAdmin) {
-                        Intent i = new Intent(MainActivity.this, FeedbackList.class);
-                        i.putExtra("isAdmin", true);
-                        startActivity(i);
-                    } else {
-                        Intent i = new Intent(MainActivity.this, HomeScreen.class);
-                        startActivity(i);
+                    if (user != null) {
+                        User.setUID(user.getUid());
+
+                        checkIfAdmin(new Callback() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                boolean isAdmin = (boolean) object;
+                                if(isAdmin) {
+                                    Intent i = new Intent(MainActivity.this, FeedbackList.class);
+                                    i.putExtra("isAdmin", true);
+                                    startActivity(i);
+                                } else {
+                                    Intent i = new Intent(MainActivity.this, HomeScreen.class);
+                                    startActivity(i);
+                                }
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(Object object) {
+                                Toast.makeText(MainActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
+
                     }
-                    finish();
+                    else {
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                    }
                 }
+            }
+        };
 
-                @Override
-                public void onError(Object object) {
-                    Toast.makeText(MainActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-
-        }
-        else {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        }
+        splashThread.start();
     }
 
     void checkIfAdmin(final Callback callback) {

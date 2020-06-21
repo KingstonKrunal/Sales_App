@@ -1,5 +1,6 @@
 package com.letsbiz.salesapp.controller;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -26,6 +27,11 @@ public class FeedbackDetails extends AppCompatActivity {
 
         ActivityFeedbackDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_feedback_details);
         binding.setFeedback(feedback);
+
+        ActionBar bar = getSupportActionBar();
+        if(bar != null) {
+            bar.setTitle("Feedback Details");
+        }
     }
 
 }

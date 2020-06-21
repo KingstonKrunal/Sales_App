@@ -1,5 +1,6 @@
 package com.letsbiz.salesapp.controller;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -35,6 +36,11 @@ public class UserProfile extends AppCompatActivity {
                 //TODO: edit name
             }
         });
+
+        ActionBar bar = getSupportActionBar();
+        if(bar != null) {
+            bar.setTitle("User Profile");
+        }
     }
 
     void setUpFields() {
