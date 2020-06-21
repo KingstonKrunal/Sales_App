@@ -28,6 +28,7 @@
     <string name="write_suggestions">Suggestion</string>
     <string name="register_quest">Did they register as a seller?</string>
     <string name="download_ques">Did they download the application?</string>
+    <string name="something_went_wrong">Something Went Wrong</string>
 
     <string-array name="shopCategory">
         <item>Baker</item>

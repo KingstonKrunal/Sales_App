@@ -1,7 +1,7 @@
 package com.letsbiz.salesapp.model;
 
 public class User {
-    private static boolean isAdmin;
+    private static boolean isAdmin = false;
     private static String UID;
 
 
