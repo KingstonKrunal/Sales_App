@@ -41,6 +41,8 @@ public class AddFeedback extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_feedback);
 
+        //TODO: Change action bar title in edit mode
+
         shopCategoryArray = getResources().getStringArray(R.array.shopCategory);
 
         mShopName = findViewById(R.id.shopNameEditText);

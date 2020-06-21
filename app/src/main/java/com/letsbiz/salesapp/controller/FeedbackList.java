@@ -34,6 +34,8 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_list);
 
+        //TODO: add vector when there no feedback
+
         dialogFragment = new EditFeedbackDialogFragment();
 
         setUpRecyclerView();
