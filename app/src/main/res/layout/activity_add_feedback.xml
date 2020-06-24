@@ -67,7 +67,7 @@
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextShopCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/acEditTextCategory" />
 
             <EditText
                 android:id="@+id/shopOwnerNameEdittext"
@@ -187,7 +187,7 @@
                 android:id="@+id/yourSuggEditText"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:ems="10"
@@ -259,16 +259,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-            <EditText
-                android:id="@+id/editTextShopCategory"
+            <AutoCompleteTextView
+                android:id="@+id/acEditTextCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:ems="10"
                 android:hint="Enter Category"
-                android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />

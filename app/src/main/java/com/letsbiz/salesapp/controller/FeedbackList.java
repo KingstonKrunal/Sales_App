@@ -10,8 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,22 +27,25 @@ import com.letsbiz.salesapp.model.FirebaseConstants;
 import com.letsbiz.salesapp.R;
 import com.letsbiz.salesapp.model.User;
 
-public class FeedbackList extends AppCompatActivity implements FeedbackListAdapter.FeedbackAdapterClickListeners {
+import org.jetbrains.annotations.NotNull;
+
+public class FeedbackList extends AppCompatActivity implements FeedbackListAdapter.FeedbackAdapterListeners {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference feedbackRef = db.collection(FirebaseConstants.FEEDBACK);
     EditFeedbackDialogFragment dialogFragment;
 
     private FeedbackListAdapter adapter;
     private RecyclerView mRecyclerView;
+    private TextView mNoFeedbackText;
+    private ImageView mNoFeedbackImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_list);
 
-        //TODO: add vector when there no feedback
-
-        dialogFragment = new EditFeedbackDialogFragment();
+        mNoFeedbackImage = findViewById(R.id.imageViewNoFeedback);
+        mNoFeedbackText = findViewById(R.id.textViewNoFeedback);
 
         setUpRecyclerView();
 
@@ -44,6 +53,26 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
         if (bar != null) {
             bar.setTitle("Feedback List");
         }
+
+        dialogFragment = new EditFeedbackDialogFragment();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_log_out) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private Query getQueryForRecycler() {
@@ -127,5 +156,18 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
         i.putExtra(FeedbackDetails.FEEDBACK, documentSnapshot.toObject(Feedback.class));
         i.putExtra(FeedbackDetails.FEEDBACK_ID, documentSnapshot.getId());
         startActivity(i);
+    }
+
+    @Override
+    public void onItemCountChanged(int count) {
+        if(count == 0) {
+            mNoFeedbackText.setAlpha(1);
+            mNoFeedbackImage.setAlpha((float)1);
+            mRecyclerView.setAlpha(0);
+        } else {
+            mNoFeedbackText.setAlpha(0);
+            mNoFeedbackImage.setAlpha((float)0);
+            mRecyclerView.setAlpha(1);
+        }
     }
 }

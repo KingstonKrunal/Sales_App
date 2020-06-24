@@ -19,7 +19,7 @@ import java.text.DateFormat;
 
 public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, FeedbackListAdapter.ViewHolder> {
 
-    private FeedbackAdapterClickListeners listener;
+    private FeedbackAdapterListeners listener;
 
     public FeedbackListAdapter(@NonNull FirestoreRecyclerOptions<Feedback> options) {
         super(options);
@@ -43,6 +43,12 @@ public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, Feed
 
         holder.dateAddedText.setText(res);
         holder.ownerNameText.setText(model.getOwnerName());
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        listener.onItemCountChanged(getItemCount());
     }
 
     public void deleteItem(final int position) {
@@ -82,12 +88,13 @@ public class FeedbackListAdapter extends FirestoreRecyclerAdapter<Feedback, Feed
         }
     }
 
-    public interface FeedbackAdapterClickListeners {
+    public interface FeedbackAdapterListeners {
         void onEditClickedListener(DocumentSnapshot documentSnapshot, int position);
         void onViewClickedListener(DocumentSnapshot documentSnapshot, int position);
+        void onItemCountChanged(int count);
     }
 
-    public void setFeedbackAdapterClickListeners(FeedbackAdapterClickListeners listener) {
+    public void setFeedbackAdapterClickListeners(FeedbackAdapterListeners listener) {
         this.listener = listener;
     }
 }
