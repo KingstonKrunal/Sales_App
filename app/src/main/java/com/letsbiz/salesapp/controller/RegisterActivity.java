@@ -170,9 +170,9 @@ public class RegisterActivity extends AppCompatActivity {
         mEditTextStatus = !TextUtils.isEmpty(mEmail) && !TextUtils.isEmpty(mPassword) && !TextUtils.isEmpty(mUserName);
 
         if (!TextUtils.isEmpty(mPassword)) {
-            if (mPassword.length() <= 8) {
+            if (mPassword.length() < 8) {
                 mCheckPassword = false;
-                Toast.makeText(RegisterActivity.this, "Password too short, enter minimum 6 character", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, "Password too short, enter minimum 8 character", Toast.LENGTH_LONG).show();
             } else {
                 mCheckPassword = true;
             }
