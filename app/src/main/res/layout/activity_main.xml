@@ -8,12 +8,12 @@
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="300dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="Letsbiz Splash Screen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/letsbiz_home_logo" />
+        app:srcCompat="@drawable/letsbiz_splash_screen" />
 </androidx.constraintlayout.widget.ConstraintLayout>
