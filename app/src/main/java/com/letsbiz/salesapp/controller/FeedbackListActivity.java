@@ -1,35 +1,42 @@
 package com.letsbiz.salesapp.controller;
 
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.letsbiz.salesapp.R;
+import com.letsbiz.salesapp.model.Feedback;
+import com.letsbiz.salesapp.model.FirebaseConstants;
+import com.letsbiz.salesapp.model.User;
+import com.letsbiz.salesapp.model.UserList;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.letsbiz.salesapp.model.Feedback;
-import com.letsbiz.salesapp.model.FirebaseConstants;
-import com.letsbiz.salesapp.R;
-import com.letsbiz.salesapp.model.User;
+public class FeedbackListActivity extends AppCompatActivity  implements FeedbackListAdapter.FeedbackAdapterListeners {
 
-import org.jetbrains.annotations.NotNull;
+    private static final String TAG = "FeedbackListActivity";
 
-public class FeedbackList extends AppCompatActivity implements FeedbackListAdapter.FeedbackAdapterListeners {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference feedbackRef = db.collection(FirebaseConstants.FEEDBACK);
     EditFeedbackDialogFragment dialogFragment;
@@ -39,22 +46,46 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
     private TextView mNoFeedbackText;
     private ImageView mNoFeedbackImage;
 
+    private boolean mIsAdmin = false;
+    private String mUid = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_list);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Feedback List");
+        setSupportActionBar(toolbar);
 
         mNoFeedbackImage = findViewById(R.id.imageViewNoFeedback);
         mNoFeedbackText = findViewById(R.id.textViewNoFeedback);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
-        setUpRecyclerView();
-
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            bar.setTitle("Feedback List");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mUid = user.getUid();
         }
 
+        Intent i = getIntent();
+        if(i != null) mIsAdmin = i.getBooleanExtra("isAdmin", false);
+
+        if (mIsAdmin) {
+            fab.setAlpha((float) 0);
+            fab.setEnabled(false);
+
+            UserList.getInstance().updateList();
+        } else {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(FeedbackListActivity.this, AddFeedbackActivity.class));
+                }
+            });
+        }
+
+        setUpRecyclerView();
         dialogFragment = new EditFeedbackDialogFragment();
+
     }
 
     @Override
@@ -65,26 +96,18 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_item_log_out) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         }
+        Log.e(TAG, "Unknown menu item selected");
         return super.onOptionsItemSelected(item);
     }
 
-    private Query getQueryForRecycler() {
-        Intent i = getIntent();
-        if(i.getBooleanExtra("isAdmin", false)) {
-            return feedbackRef.orderBy("date", Query.Direction.DESCENDING);
-        } else {
-            return feedbackRef.whereEqualTo("uid", User.getUID()).orderBy("date", Query.Direction.DESCENDING);
-        }
-    }
-
-    void setUpRecyclerView() {
+    private void setUpRecyclerView() {
         FirestoreRecyclerOptions<Feedback> options = new FirestoreRecyclerOptions.Builder<Feedback>()
                 .setQuery(getQueryForRecycler(), Feedback.class)
                 .setLifecycleOwner(this)
@@ -103,19 +126,13 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
         adapter.setFeedbackAdapterClickListeners(this);
     }
 
-    private void setSlideToDelete() {
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                adapter.deleteItem(viewHolder.getAdapterPosition());
-            }
-        }).attachToRecyclerView(mRecyclerView);
-
+    private Query getQueryForRecycler() {
+        Intent i = getIntent();
+        if(mIsAdmin) {
+            return feedbackRef.orderBy("date", Query.Direction.DESCENDING);
+        } else {
+            return feedbackRef.whereEqualTo("uid", mUid).orderBy("date", Query.Direction.DESCENDING);
+        }
     }
 
     @Override
@@ -140,9 +157,9 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
 
             @Override
             public void editSelected() {
-                Intent i = new Intent(FeedbackList.this, AddFeedback.class);
-                i.putExtra(FeedbackDetails.FEEDBACK, documentSnapshot.toObject(Feedback.class));
-                i.putExtra(FeedbackDetails.FEEDBACK_ID, documentSnapshot.getId());
+                Intent i = new Intent(FeedbackListActivity.this, AddFeedbackActivity.class);
+                i.putExtra(FeedbackDetailsActivity.FEEDBACK, documentSnapshot.toObject(Feedback.class));
+                i.putExtra(FeedbackDetailsActivity.FEEDBACK_ID, documentSnapshot.getId());
                 startActivity(i);
             }
         });
@@ -152,9 +169,10 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
 
     @Override
     public void onViewClickedListener(DocumentSnapshot documentSnapshot, int position) {
-        Intent i = new Intent(FeedbackList.this, FeedbackDetails.class);
-        i.putExtra(FeedbackDetails.FEEDBACK, documentSnapshot.toObject(Feedback.class));
-        i.putExtra(FeedbackDetails.FEEDBACK_ID, documentSnapshot.getId());
+        Intent i = new Intent(FeedbackListActivity.this, FeedbackDetailsActivity.class);
+        i.putExtra(FeedbackDetailsActivity.FEEDBACK, documentSnapshot.toObject(Feedback.class));
+        i.putExtra(FeedbackDetailsActivity.FEEDBACK_ID, documentSnapshot.getId());
+        i.putExtra("isAdmin", mIsAdmin);
         startActivity(i);
     }
 
@@ -169,5 +187,21 @@ public class FeedbackList extends AppCompatActivity implements FeedbackListAdapt
             mNoFeedbackImage.setAlpha((float)0);
             mRecyclerView.setAlpha(1);
         }
+    }
+
+
+    private void setSlideToDelete() {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.deleteItem(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(mRecyclerView);
+
     }
 }

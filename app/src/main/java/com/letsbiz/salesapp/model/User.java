@@ -1,24 +1,29 @@
 package com.letsbiz.salesapp.model;
 
 public class User {
-    private static boolean isAdmin = false;
-    private static String UID;
+    private String userName;
+    private String email;
 
+    public User() {}
 
-    public static String getUID() {
-        return UID;
+    public User(String userName, String email) {
+        this.userName = userName;
+        this.email = email;
     }
 
-    public static void setUID(String UID) {
-        User.UID = UID;
+    public String getEmail() {
+        return email;
     }
 
-
-    public static boolean isIsAdmin() {
-        return isAdmin;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public static void setIsAdmin(boolean isAdmin) {
-        User.isAdmin = isAdmin;
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

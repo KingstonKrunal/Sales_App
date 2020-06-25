@@ -2,11 +2,11 @@ package com.letsbiz.salesapp.controller;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +26,16 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.letsbiz.salesapp.R;
+import com.letsbiz.salesapp.model.Callback;
+import com.letsbiz.salesapp.model.User;
+import com.letsbiz.salesapp.model.UserRepository;
 
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    private static final String TAG = "RegisterActivity";
 
     EditText mInputEmail, mInputPassword, mInputUsername;
     Button mRegister, mSignInLinkBtn;
@@ -39,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     Boolean mEditTextStatus, mCheckPassword;
     ImageButton mShowPassword;
-//    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,23 +115,31 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if(fUser != null) {
                         String uId = fUser.getUid();
+
+                        UserRepository userRepository = new UserRepository(uId);
+                        userRepository.addNewUser(new User(mUserName, mEmail), new Callback() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                startActivity(new Intent(RegisterActivity.this, FeedbackListActivity.class));
+                            }
+
+                            @Override
+                            public void onError(Object object) {
+                                Log.e(TAG, "Error adding user");
+                            }
+                        });
+
+//                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().
+//                                setDisplayName(mUserName).
+//                                build();
 //
-//                        mDatabase = FirebaseDatabase.getInstance().getReference();
-//                        mDatabase.child("users").child(uId).child("name").setValue(mUserName);
-//                        mDatabase.child("users").child(uId).child("totalEntries").setValue(0);
+//                        fUser.updateProfile(profileUpdate);
 
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().
-                                setDisplayName(mUserName).
-                                build();
+//                        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = sharedPreferences.edit();
+//                        editor.putString("Email", emailInfo);
+//                        editor.apply();
 
-                        fUser.updateProfile(profileUpdate);
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("Email", emailInfo);
-                        editor.apply();
-
-                        startActivity(new Intent(RegisterActivity.this, HomeScreen.class));
                     } else {
                         Toast.makeText(RegisterActivity.this, "Unknown Error Occurred", Toast.LENGTH_SHORT).show();
                     }
@@ -156,11 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword = mInputPassword.getText().toString().trim();
         mUserName = mInputUsername.getText().toString().trim();
 
-        if (TextUtils.isEmpty(mEmail) || TextUtils.isEmpty(mPassword) || TextUtils.isEmpty(mUserName)) {
-            mEditTextStatus = false;
-        } else {
-            mEditTextStatus = true;
-        }
+        mEditTextStatus = !TextUtils.isEmpty(mEmail) && !TextUtils.isEmpty(mPassword) && !TextUtils.isEmpty(mUserName);
 
         if (!TextUtils.isEmpty(mPassword)) {
             if (mPassword.length() <= 8) {

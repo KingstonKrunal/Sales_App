@@ -17,17 +17,15 @@ import com.google.firebase.firestore.PropertyName;
 import com.letsbiz.salesapp.R;
 import com.letsbiz.salesapp.model.Callback;
 import com.letsbiz.salesapp.model.User;
+import com.letsbiz.salesapp.model.UserRepository;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static class AdminDocument {
-        @PropertyName("admins")
-        public List<String> adminUids;
+    private String mUid;
 
-        public AdminDocument(){}
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +42,19 @@ public class MainActivity extends AppCompatActivity {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user != null) {
-                        User.setUID(user.getUid());
+                        mUid = user.getUid();
 
-                        checkIfAdmin(new Callback() {
+                        new UserRepository(mUid).checkIfAdmin(new Callback() {
                             @Override
                             public void onSuccess(Object object) {
                                 boolean isAdmin = (boolean) object;
+                                Intent i = new Intent(MainActivity.this, FeedbackListActivity.class);
+
                                 if(isAdmin) {
-                                    Intent i = new Intent(MainActivity.this, FeedbackList.class);
                                     i.putExtra("isAdmin", true);
-                                    startActivity(i);
-                                } else {
-                                    Intent i = new Intent(MainActivity.this, HomeScreen.class);
-                                    startActivity(i);
                                 }
+
+                                startActivity(i);
                                 finish();
                             }
 
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-
                     }
                     else {
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -78,36 +74,5 @@ public class MainActivity extends AppCompatActivity {
         };
 
         splashThread.start();
-    }
-
-    void checkIfAdmin(final Callback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("app").document("app1")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        AdminDocument adminDoc = documentSnapshot.toObject(AdminDocument.class);
-                        if (adminDoc != null) {
-                            for (String key:
-                                    adminDoc.adminUids) {
-                                if(key.equals(User.getUID())) {
-                                    // TODO: Add that data persistence
-                                    callback.onSuccess(true);
-                                    return;
-                                }
-                            }
-                        }
-                        // TODO: Add that data persistence
-                        callback.onSuccess(false);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        callback.onError(null);
-                    }
-                });
     }
 }

@@ -20,6 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.letsbiz.salesapp.model.Feedback;
 import com.letsbiz.salesapp.model.Callback;
 import com.letsbiz.salesapp.model.FeedbackRepository;
@@ -28,14 +30,7 @@ import com.letsbiz.salesapp.model.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-
-public class AddFeedback extends AppCompatActivity {
+public class AddFeedbackActivity extends AppCompatActivity {
     EditText mShopName, mShopOwnerName, mOwnerSug, mUserSug;
     AutoCompleteTextView mShopCategory;
     Button mSaveButton;
@@ -48,6 +43,7 @@ public class AddFeedback extends AppCompatActivity {
     private Feedback mFeedback;
     private RequestMode mRequestMode;
     private String[] mCategoriesArray;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +72,10 @@ public class AddFeedback extends AppCompatActivity {
 
         mShopCategory.setThreshold(2);
         mShopCategory.setAdapter(categoriesAdapter);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            mUid = user.getUid();
     }
 
     String getNonEmptyString(String s) {
@@ -146,7 +146,7 @@ public class AddFeedback extends AppCompatActivity {
 
                     @Override
                     public void onError(Object object) {
-                        Toast.makeText(AddFeedback.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddFeedbackActivity.this, "Something Unexpected occurred", Toast.LENGTH_SHORT).show();
                         hideProgress();
                     }
                 };
@@ -155,7 +155,7 @@ public class AddFeedback extends AppCompatActivity {
 
                 switch (mRequestMode) {
                     case Create:
-                        repository.createFeedback(feedback, callback);
+                        repository.createFeedback(feedback, callback, mUid);
                         break;
                     case Edit:
                         repository.updateFeedback(mFeedbackId, feedback, callback);
@@ -186,10 +186,10 @@ public class AddFeedback extends AppCompatActivity {
 
     RequestMode getCurrentRequestMode() {
         Intent i = getIntent();
-        String id = i.getStringExtra(FeedbackDetails.FEEDBACK_ID);
+        String id = i.getStringExtra(FeedbackDetailsActivity.FEEDBACK_ID);
         if(!Utility.isEmptyOrNull(id)) {
             mFeedbackId = id;
-            mFeedback = (Feedback) i.getSerializableExtra(FeedbackDetails.FEEDBACK);
+            mFeedback = (Feedback) i.getSerializableExtra(FeedbackDetailsActivity.FEEDBACK);
             return RequestMode.Edit;
         } else {
             return RequestMode.Create;

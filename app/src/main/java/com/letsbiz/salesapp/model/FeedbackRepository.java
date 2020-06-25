@@ -13,11 +13,11 @@ public class FeedbackRepository {
     private static CollectionReference feedbackRef = FirebaseFirestore.getInstance()
             .collection(FirebaseConstants.FEEDBACK);
 
-    public void createFeedback(Feedback feedback, final Callback callback) {
+    public void createFeedback(Feedback feedback, final Callback callback, String uid) {
         final String key = feedbackRef.document().getId();
         if(feedback != null && !Utility.isEmptyOrNull(key)) {
 
-            feedback.setUid(User.getUID());
+            feedback.setUid(uid);
 
             feedbackRef.document(key).set(feedback)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

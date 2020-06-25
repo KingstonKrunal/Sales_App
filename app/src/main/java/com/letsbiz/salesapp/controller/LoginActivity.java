@@ -1,5 +1,6 @@
 package com.letsbiz.salesapp.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -24,8 +25,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.letsbiz.salesapp.model.Callback;
 import com.letsbiz.salesapp.model.User;
 import com.letsbiz.salesapp.R;
+import com.letsbiz.salesapp.model.UserRepository;
 
 import java.util.Objects;
 
@@ -35,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     Button signIn, createAccount;
     FirebaseAuth firebaseAuth;
     ImageButton showPassword;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         signIn = findViewById(R.id.sign_in_button);
         createAccount = findViewById(R.id.sign_in_create_account);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+        FirebaseAuth.AuthStateListener mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = firebaseAuth.getCurrentUser();
@@ -56,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (mFirebaseUser != null) {
                     Toast.makeText(LoginActivity.this, "You are logged in.", Toast.LENGTH_SHORT).show();
 
-                    startActivity(new Intent(LoginActivity.this, HomeScreen.class));
+                    startActivity(new Intent(LoginActivity.this, FeedbackListActivity.class));
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Please Login.", Toast.LENGTH_SHORT).show();
@@ -100,10 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (passwordInfo.isEmpty()) {
                     password.setError("Please enter your Password");
                     password.requestFocus();
-                } else if (emailInfo.isEmpty() && passwordInfo.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Fields are empty!", Toast.LENGTH_SHORT).show();
-                } else if (!(emailInfo.isEmpty() && passwordInfo.isEmpty())) {
-
+                } else {
                     firebaseAuth.signInWithEmailAndPassword(emailInfo, passwordInfo).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -115,10 +115,29 @@ public class LoginActivity extends AppCompatActivity {
 //                                editor.putString("Password", String.valueOf(password));
 //                                editor.apply();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user == null) return;
-                                User.setUID(user.getUid());
+                                if (user == null) return;
 
-                                startActivity(new Intent(LoginActivity.this, HomeScreen.class));
+                                new UserRepository(user.getUid()).checkIfAdmin(new Callback() {
+                                    @Override
+                                    public void onSuccess(Object object) {
+                                        boolean isAdmin = (boolean) object;
+                                        Intent i = new Intent(LoginActivity.this, FeedbackListActivity.class);
+
+                                        if(isAdmin) {
+                                            i.putExtra("isAdmin", true);
+                                        }
+
+                                        startActivity(i);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onError(Object object) {
+                                        Toast.makeText(LoginActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                });
+                                startActivity(new Intent(LoginActivity.this, FeedbackListActivity.class));
                                 finish();
                             }
                             else {
@@ -138,8 +157,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
-                } else {
-                    Toast.makeText(LoginActivity.this, "Error Occurred!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
