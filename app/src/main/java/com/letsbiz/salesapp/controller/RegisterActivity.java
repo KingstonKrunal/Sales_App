@@ -151,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
                     } catch (FirebaseAuthInvalidCredentialsException e) {
                         Toast.makeText(RegisterActivity.this, "Invalid Data", Toast.LENGTH_LONG).show();
                     } catch (FirebaseAuthUserCollisionException e) {
-                        Toast.makeText(RegisterActivity.this, "User exist", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "User exist. Please login", Toast.LENGTH_LONG).show();
                     } catch (FirebaseNetworkException e) {
                         Toast.makeText(RegisterActivity.this, "No Internet Connection", Toast.LENGTH_LONG).show();
                     } catch (Exception ignored) {
