@@ -120,6 +120,8 @@ public class AddFeedbackActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int downloadedRadioGroup, registeredRadioGroup;
+                String downloadedRG, registeredRG;
                 if(!validate()) return;
 
                 showProgress();
@@ -130,12 +132,31 @@ public class AddFeedbackActivity extends AppCompatActivity {
                 feedback.setShopCategory(mShopCategory.getText().toString());
                 feedback.setShopOwnerSug(getNonEmptyString(mOwnerSug.getText().toString()));
                 feedback.setUserSug(getNonEmptyString(mUserSug.getText().toString()));
-                feedback.setIsInstalled(
-                        mAppDownloadedRadioG.getCheckedRadioButtonId() == R.id.down_yes ? "Yes" : "No"
-                );
-                feedback.setIsRegistered(
-                        mRegisteredRadioG.getCheckedRadioButtonId() == R.id.reg_yes ? "Yes" : "No"
-                );
+
+                downloadedRadioGroup = mAppDownloadedRadioG.getCheckedRadioButtonId();
+
+                if(downloadedRadioGroup == R.id.down_yes){
+                    downloadedRG = "Yes";
+                } else if(downloadedRadioGroup == R.id.down_no){
+                    downloadedRG = "No";
+                } else {
+                    downloadedRG = "Not Sure";
+                }
+
+                feedback.setIsInstalled(downloadedRG);
+
+                registeredRadioGroup = mRegisteredRadioG.getCheckedRadioButtonId();
+
+                if(registeredRadioGroup == R.id.reg_yes){
+                    registeredRG = "Yes";
+                } else if(registeredRadioGroup == R.id.reg_no){
+                    registeredRG = "No";
+                } else {
+                    registeredRG = "Not Sure";
+                }
+
+                feedback.setIsRegistered(registeredRG);
+
                 feedback.setRatings(mRatingBar.getRating());
 
                 Callback callback = new Callback() {

@@ -22,15 +22,15 @@
     <string name="no">No</string>
     <string name="installed">Downloaded</string>
     <string name="ratings">Ratings</string>
-    <string name="owner_suggestion">Owner\'s Suggestions</string>
-    <string name="your_suggestion">Your Suggestions</string>
+    <string name="suggestions_notes">Suggestions/Notes</string>
     <string name="save">Save</string>
-    <string name="write_suggestions">Suggestion</string>
+    <string name="write_suggestions">Suggestions/Notes</string>
     <string name="register_quest">Did they register as a seller?</string>
     <string name="download_ques">Did they download the application?</string>
     <string name="something_went_wrong">Something Went Wrong</string>
     <string name="no_feedback">No Feedback Found</string>
     <string name="not_set">Not Set</string>
+    <string name="not_sure">Not Sure</string>
 
     <string-array name="shopCategory">
         <item>Baker</item>

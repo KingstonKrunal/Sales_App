@@ -117,6 +117,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no" />
+
+                <RadioButton
+                    android:id="@+id/down_not_sure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_sure" />
             </RadioGroup>
 
             <TextView
@@ -149,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/owner_suggestion"
+                android:text="@string/suggestions_notes"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -170,36 +176,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/your_suggestion"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/theirSuggEditText" />
-
-            <EditText
-                android:id="@+id/yourSuggEditText"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/write_suggestions"
-                android:inputType="textMultiLine"
-                app:layout_constraintBottom_toTopOf="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.483"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14"
-                app:layout_constraintVertical_bias="0.0" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -223,7 +199,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/yourSuggEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/theirSuggEditText" />
 
             <RadioGroup
                 android:id="@+id/registeredRadioGroup"
@@ -247,6 +223,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no" />
+
+                <RadioButton
+                    android:id="@+id/reg_not_sure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_sure" />
             </RadioGroup>
 
             <RatingBar
